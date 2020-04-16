@@ -85,6 +85,6 @@ end
 
 # puts [1, 2, 3, 4, 5].my_map(my_proc)
 
-puts [2, 2, 3, 4, 5].my_inject { |total, element| total * element }
+# puts [2, 2, 3, 4, 5].my_inject { |total, element| total * element }
 
 # puts [2, 4, 5].multiply_els
