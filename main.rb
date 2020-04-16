@@ -15,6 +15,25 @@ module Enumerable
         result_array
     end
 
+    def my_all?
+        result = true
+        self.my_each { |i| result = false unless yield(i) }
+        result
+    end
+
+    def my_any?
+        result = false
+        self.my_each { |i| result = true if yield(i) }
+        result
+    end
+
+    def my_none?
+        result = true
+        self.my_each { |i| result = false if yield(i) }
+        result
+    end
+
+
 end
 
 
