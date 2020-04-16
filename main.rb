@@ -33,6 +33,12 @@ module Enumerable
         result
     end
 
+    def my_count
+        result = 0
+        self.my_each { |i| result += 1 if yield(i) }
+        result
+    end
+
 
 end
 
@@ -41,3 +47,7 @@ end
 # [1, 2, 3, 4, 5].my_each { |item| puts item * 2 }
 # [1, 2, 3, 4, 5].my_each_with_index { |item, index| puts " #{item} and index is #{index}" }
 # puts [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].my_select { |item| item % 2 != 0 }
+# puts [3, 5, 9].my_all? { |item| item % 2 == 0 }
+# puts [1, 3, 5, 2].my_any? { |item| item % 2 == 0 }
+#puts [1, 2, 3, 4, 5, 10].my_none? { |item| item % 10 == 0 }
+# puts [1, 3, 5, 7].my_count { |item| item % 2 == 0 }
