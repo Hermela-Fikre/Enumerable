@@ -24,7 +24,7 @@ Usage
 
 Author
 
-👤 Kubilay Caglayan
+👤 Hermela Fikre
 
     Github: @Hermela-Fikre
     Twitter: 
