@@ -1,11 +1,11 @@
 module Enumerable  
     def my_each
-        self.length.times do |i| yield self[i]
+        size.times do |i| yield self[i]
         end
     end
 
     def my_each_with_index
-        self.length.times { |i| yield self[i], i }
+        self.size.times { |i| yield self[i], i }
     end
 
     def my_select
@@ -39,8 +39,8 @@ module Enumerable
         result
     end
 
-    def my_map (result = true)
-        if result == true
+    def my_map (x = nil)
+        if x == nil
             result = []
             self.my_each { |i| result.push(yield(i)) }
             result
@@ -65,7 +65,7 @@ end
 
 
 # TESTS
-# [1, 2, 3, 4, 5].my_each { |item| puts item * 2 }
+# puts [1,2,3,4,5].my_each { |item| puts item * 2 }
 
 # [1, 2, 3, 4, 5].my_each_with_index { |item, index| puts " #{item} and index is #{index}" }
 
@@ -75,15 +75,15 @@ end
 
 # puts [1, 3, 5, 2].my_any? { |item| item % 2 == 0 }
 
-#puts [1, 2, 3, 4, 5, 10].my_none? { |item| item % 10 == 0 }
+# puts [1, 2, 3, 4, 5, 10].my_none? { |item| item % 10 == 0 }
 
 # puts [1, 3, 5, 7].my_count { |item| item % 2 == 0 }
 
-# puts [1, 2, 3, 4, 5].my_map { |item| item * 2 }
+puts [1, 2, 3, 4, 5].my_map { |item| item * 2 }
 
-# my_proc = Proc.new { |item| item * 5 }
+my_proc = Proc.new { |item| item * 5 }
 
-# puts [1, 2, 3, 4, 5].my_map(my_proc)
+puts [1, 2, 3, 4, 5].my_map(my_proc)
 
 # puts [2, 2, 3, 4, 5].my_inject { |total, element| total * element }
 
