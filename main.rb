@@ -47,6 +47,19 @@ module Enumerable
         end
     end
 
+    def my_inject
+        result = self.first
+        self.my_each_with_index do |item, index|
+            next if index == 0
+            result = yield(result, item)
+        end
+        result
+    end
+
+    def multiply_els
+        self.my_inject { |total, item| total * item }
+    end
+
 
 end
 
@@ -71,3 +84,7 @@ end
 # my_proc = Proc.new { |item| item * 5 }
 
 # puts [1, 2, 3, 4, 5].my_map(my_proc)
+
+# puts [1, 2, 3, 4, 5].my_inject { |total, element| total * element }
+
+# puts [2, 4, 5].multiply_els
