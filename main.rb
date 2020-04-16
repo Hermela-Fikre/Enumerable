@@ -1,6 +1,6 @@
 module Enumerable  
     def my_each
-        slef.length.times do |i| yield slef[i]
+        self.length.times do |i| yield self[i]
         end
     end
 
@@ -39,8 +39,8 @@ module Enumerable
         result
     end
 
-    def my_map (x = nil)
-        if x == nil
+    def my_map (result = true)
+        if result == true
             result = []
             self.my_each { |i| result.push(yield(i)) }
             result
@@ -85,6 +85,6 @@ end
 
 # puts [1, 2, 3, 4, 5].my_map(my_proc)
 
-# puts [1, 2, 3, 4, 5].my_inject { |total, element| total * element }
+puts [2, 2, 3, 4, 5].my_inject { |total, element| total * element }
 
 # puts [2, 4, 5].multiply_els
