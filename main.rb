@@ -41,18 +41,21 @@ module Enumerable
     result
   end
 
-  def my_map(x = true)
-    if x == true
-      result = []
+  def my_map(num = false)
+    result = []
+    if num == false
       my_each { |i| result.push(yield(i)) }
       result
+    else
+      my_each { |i| result.push num.call(i) }
     end
+    result
   end
 
   def my_inject
     result = first
     my_each_with_index do |item, index|
-      next if index == 0
+      next if index.zero?
 
       result = yield(result, item)
     end
@@ -65,7 +68,7 @@ module Enumerable
 end
 
 # TESTS
-puts [1, 2, 3, 4, 5].my_each { |item| puts item * 2 }
+# puts ([1, 2, 3, 4, 5].my_each { |item| puts item * 2 })
 
 # [1, 2, 3, 4, 5].my_each_with_index { |item, index| puts " #{item} and index is #{index}" }
 
@@ -79,11 +82,11 @@ puts [1, 2, 3, 4, 5].my_each { |item| puts item * 2 }
 
 # puts [1, 3, 5, 7].my_count { |item| item % 2 == 0 }
 
-# puts [1, 2, 3, 4, 5].my_map { |item| item * 2 }
+puts([1, 2, 3, 4, 5].my_map { |item| item * 2 })
 
-# my_proc = Proc.new { |item| item * 5 }
+my_proc = proc { |item| item * 5 }
 
-# puts [1, 2, 3, 4, 5].my_map(my_proc)
+puts [1, 2, 3, 4, 5].my_map(my_proc)
 
 # puts [2, 2, 3, 4, 5].my_inject { |total, element| total * element }
 
