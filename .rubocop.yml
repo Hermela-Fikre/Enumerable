@@ -26,10 +26,10 @@ Style/HashEachMethods:
   Enabled: true 
 
 
-  Style/HashTransformKeys:
-  Enabled:true
+Style/HashTransformKeys:
+  Enabled: true
 Style/HashTransformValues:
-  Enabled:true
+  Enabled: true
 Style/Documentation:
   Enabled: false
 Style/ClassAndModuleChildren:
