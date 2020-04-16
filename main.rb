@@ -82,11 +82,11 @@ end
 
 # puts [1, 3, 5, 7].my_count { |item| item % 2 == 0 }
 
-puts([1, 2, 3, 4, 5].my_map { |item| item * 2 })
+# puts([1, 2, 3, 4, 5].my_map { |item| item * 2 })
 
-my_proc = proc { |item| item * 5 }
+# my_proc = proc { |item| item * 5 }
 
-puts [1, 2, 3, 4, 5].my_map(my_proc)
+# puts [1, 2, 3, 4, 5].my_map(my_proc)
 
 # puts [2, 2, 3, 4, 5].my_inject { |total, element| total * element }
 
