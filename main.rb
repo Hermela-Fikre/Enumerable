@@ -1,15 +1,21 @@
 module Enumerable
   def my_each
+    return to_enum :my_each unless block_given?
+
     size.times do |i|
       yield self[i]
     end
   end
 
   def my_each_with_index
+    return to_enum :my_each unless block_given?
+
     size.times { |i| yield self[i], i }
   end
 
   def my_select
+    return to_enum :my_select unless block_given?
+
     result_array = []
     my_each do |i|
       result_array << i if yield(i)
@@ -17,77 +23,80 @@ module Enumerable
     result_array
   end
 
-  def my_all?
+  def my_all?(args = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     result = true
-    my_each { |i| result = false unless yield(i) }
-    result
-  end
-
-  def my_any?
-    result = false
-    my_each { |i| result = true if yield(i) }
-    result
-  end
-
-  def my_none?
-    result = true
-    my_each { |i| result = false if yield(i) }
-    result
-  end
-
-  def my_count
-    result = 0
-    my_each { |i| result += 1 if yield(i) }
-    result
-  end
-
-  def my_map(num = false)
-    result = []
-    if num == false
-      my_each { |i| result.push(yield(i)) }
-      result
+    if args.nil? && !block_given?
+      my_each { |x| result = false if x.nil? || !x }
+    elsif args.nil?
+      my_each { |x| result = false unless yield(x) }
+    elsif args.is_a? Regexp
+      my_each { |x| result = false unless x.match(args) }
+    elsif args.is_a? Module
+      my_each { |x| result = false unless x.is_a?(args) }
     else
-      my_each { |i| result.push num.call(i) }
+      my_each { |x| result = false unless x == args }
     end
     result
   end
 
-  def my_inject
-    result = first
-    my_each_with_index do |item, index|
-      next if index.zero?
-
-      result = yield(result, item)
+  def my_any?(args = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    result = false
+    if args.nil? && !block_given?
+      my_each { |x| result = true unless x.nil? || !x }
+    elsif args.nil?
+      my_each { |x| result = true if yield(x) }
+    elsif args.is_a? Regexp
+      my_each { |x| result = true if x.match(args) }
+    elsif args.is_a? Module
+      my_each { |x| result = true if x.is_a?(args) }
+    else
+      my_each { |x| result = true if x == args }
     end
     result
   end
 
-  def multiply_els
-    my_inject { |total, item| total * item }
+  def my_none?(par = nil, &block)
+    !my_any?(par, &block)
+  end
+
+  def my_count(par = nil)
+    result = 0
+    if block_given?
+      my_each { |i| result += 1 if yield(i) }
+    elsif !par.nil?
+      my_each { |i| result += 1 if par == i }
+    else
+      result = length
+    end
+    result
+  end
+
+  def my_map(proc = nil)
+    return to_enum :my_map unless block_given?
+
+    result = []
+    my_each { |x| result << (proc ? proc.call(x) : yield(x)) }
+    result
+  end
+
+  def my_inject(*par) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    new_array = is_a?(Array) ? self : to_a
+    total = par[0] if par[0].is_a? Integer
+    if par[0].is_a?(Symbol) || par[0].is_a?(String)
+      sym = par[0]
+    elsif par[0].is_a?(Integer)
+      sym = par[1] if par[1].is_a?(Symbol) || par[1].is_a?(String)
+    end
+    if sym
+      new_array.my_each { |item| total = total ? total.send(sym, item) : item }
+      total
+    else
+      new_array.my_each { |item| total = total ? yield(total, item) : item }
+    end
+    total
   end
 end
 
-# TESTS
-# puts ([1, 2, 3, 4, 5].my_each { |item| puts item * 2 })
-
-# [1, 2, 3, 4, 5].my_each_with_index { |item, index| puts " #{item} and index is #{index}" }
-
-# puts [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].my_select { |item| item % 2 != 0 }
-
-# puts [3, 5, 9].my_all? { |item| item % 2 == 0 }
-
-# puts [1, 3, 5, 2].my_any? { |item| item % 2 == 0 }
-
-# puts [1, 2, 3, 4, 5, 10].my_none? { |item| item % 10 == 0 }
-
-# puts [1, 3, 5, 7].my_count { |item| item % 2 == 0 }
-
-# puts([1, 2, 3, 4, 5].my_map { |item| item * 2 })
-
-# my_proc = proc { |item| item * 5 }
-
-# puts [1, 2, 3, 4, 5].my_map(my_proc)
-
-# puts [2, 2, 3, 4, 5].my_inject { |total, element| total * element }
-
-# puts [2, 4, 5].multiply_els
+def multiply_els
+  my_inject { |total, item| total * item }
+end
